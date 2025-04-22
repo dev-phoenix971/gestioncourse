@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Tiercé</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        h1 { color: #333; }
+        .menu { margin-top: 20px; }
+        .menu a { 
+            display: block; 
+            padding: 10px; 
+            margin: 10px auto; 
+            width: 200px; 
+            background-color: #007BFF; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 5px;
+        }
+        .menu a:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <h1>Bienvenue sur l'application de Tiercé</h1>
+    <p>Gérez les courses, les chevaux et les prédictions facilement.</p>
+
+    <div class="menu">
+        <a href="{% url 'race_list' %}">📋 Voir les courses</a>
+        <a href="{% url 'add_race' %}">➕ Ajouter une course</a>
+        <a href="{% url 'horse_list' %}">🐎 Voir les chevaux</a>
+        <a href="{% url 'add_horse' %}">➕ Ajouter un cheval</a>
+        <a href="{% url 'add_race_result' %}">🏆 Ajouter un résultat de course</a>
+        <a href="{% url 'prediction-list' %}">🔮 Voir les prédictions</a>
+        <a href="{% url 'trends' %}">📊 Voir les tendances</a>
+        <a href="{% url 'place_bet' %}">🎲 Placer un pari sur le Quinté</a>
+        <a href="{% url 'race_statistics' %}">📈 Voir les statistiques des Quinté 2025</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter une course</title>
+</head>
+<body>
+    <h2>Ajouter une nouvelle course</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Ajouter</button>
+    </form>
+    <a href="{% url 'race_list' %}">Retour à la liste des courses</a>
+</body>
+</html>

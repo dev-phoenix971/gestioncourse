@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Hippiques</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+
+    <h1>Liste des Courses Hippiques</h1>
+    <a href="{% url 'add_race' %}"><button>Ajouter une course</button></a>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date</th>
+                <th>Lieu</th>
+                <th>Distance</th>
+                <th>Terrain</th>
+                <th>Météo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for race in races %}
+            <tr>
+                <td>{{ race.name }}</td>
+                <td>{{ race.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ race.location }}</td>
+                <td>{{ race.distance }} m</td>
+                <td>{{ race.terrain }}</td>
+                <td>{{ race.weather }}</td>
+                <td>
+                    <a href="{% url 'update_race' race.id %}"><button>Modifier</button></a>
+                    <a href="{% url 'delete_race' race.id %}" onclick="return confirm('Confirmer la suppression ?');">
+                        <button style="background-color:red; color:white;">Supprimer</button>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">Aucune course disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Prédictions des Courses</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Course</th>
+            <th>Cheval Favori</th>
+            <th>Probabilité</th>
+            <th>Explication</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prediction in predictions %}
+        <tr>
+            <td>{{ prediction.race.name }}</td>
+            <td>{{ prediction.horse.name }}</td>
+            <td>{{ prediction.probability }}%</td>
+            <td>{{ prediction.reason }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Aucune prédiction disponible.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h2>Personnalisez vos prédictions</h2>
+<form id="preferences-form">
+    <label>Météo :</label>
+    <input type="range" min="0" max="1" step="0.1" id="weather_importance">
+    
+    <label>Forme du cheval :</label>
+    <input type="range" min="0" max="1" step="0.1" id="horse_form_importance">
+    
+    <label>Expérience du jockey :</label>
+    <input type="range" min="0" max="1" step="0.1" id="jockey_experience_importance">
+    
+    <button type="submit">Mettre à jour</button>
+</form>
+<h2>Tendances des utilisateurs</h2>
+<div id="trends">
+    <p>Chargement des tendances...</p>
+</div>
+<h1>Gestion des Courses et Chevaux</h1>
+<a href="{% url 'add_race' %}"><button>Ajouter une course</button></a>
+<a href="{% url 'add_horse' %}"><button>Ajouter un cheval</button></a>
+<a href="{% url 'add_race_result' %}"><button>Ajouter un résultat de course</button></a>
+<a href="{% url 'horse_list' %}"><button>Voir la liste des chevaux</button></a>
+<script>
+document.getElementById("preferences-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    fetch("/api/user-preferences/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            weather_importance: document.getElementById("weather_importance").value,
+            horse_form_importance: document.getElementById("horse_form_importance").value,
+            jockey_experience_importance: document.getElementById("jockey_experience_importance").value
+        })
+    })
+    .then(response => response.json())
+    .then(data => alert("Préférences mises à jour !"));
+});
+</script>
+<script>
+    function loadTrends() {
+        fetch("/api/trends/")
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                document.getElementById("trends").innerHTML = "<p>Aucune tendance disponible pour le moment.</p>";
+            } else {
+                document.getElementById("trends").innerHTML = `
+                    <p><strong>Importance de la météo :</strong> ${data.weather_avg * 100}%</p>
+                    <p><strong>Forme du cheval :</strong> ${data.horse_form_avg * 100}%</p>
+                    <p><strong>Expérience du jockey :</strong> ${data.jockey_exp_avg * 100}%</p>
+                `;
+            }
+        })
+        .catch(error => console.error("Erreur lors du chargement des tendances :", error));
+    }
+    
+    document.addEventListener("DOMContentLoaded", loadTrends);
+    </script>
+</body>
+</html>

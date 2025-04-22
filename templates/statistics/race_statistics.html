@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques des Quinté 2025</title>
+</head>
+<body>
+    <h2>Statistiques des Quinté 2025 - Hippodrome de Paris</h2>
+    
+    <h3>🏆 Chevaux les plus gagnants</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Cheval</th>
+                <th>Victoires</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for horse in best_horses %}
+            <tr>
+                <td>{{ horse.horse__name }}</td>
+                <td>{{ horse.wins }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Aucune donnée disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'home' %}">Retour à l'accueil</a>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un cheval</title>
+</head>
+<body>
+    <h2>Ajouter un nouveau cheval</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Ajouter</button>
+    </form>
+    <a href="{% url 'horse_list' %}">Retour à la liste des chevaux</a>
+</body>
+</html>
